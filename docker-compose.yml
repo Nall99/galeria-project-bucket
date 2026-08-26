@@ -1,0 +1,31 @@
+services:
+  minio:
+    image: quay.io/minio/minio:RELEASE.2025-02-03T21-03-04Z-cpuv1
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    environment:
+      MINIO_ROOT_USER: admin
+      MINIO_ROOT_PASSWORD: senha12345
+      MINIO_API_CORS_ALLOW_ORIGIN: "*"
+    volumes:
+      - ./minio-data:/data
+    command: server /data --console-address ":9001"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    build: ./
+    ports:
+      - "8000:8000"
+    env_file:
+      - ./.env
+    environment:
+      MINIO_ENDPOINT: http://minio:9000
+      MINIO_PUBLIC_ENDPOINT: http://localhost:9000
+    depends_on:
+      minio:
+        condition: service_healthy

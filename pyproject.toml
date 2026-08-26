@@ -1,0 +1,11 @@
+[project]
+name = "galeria-project"
+version = "0.1.0"
+requires-python = ">=3.12"
+dependencies = [
+    "boto3>=1.43.80",
+    "click>=8.5.0",
+    "fastapi[standard]>=0.141.1",
+    "python-dotenv>=1.2.3",
+    "uvicorn>=0.52.4",
+]
