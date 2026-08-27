@@ -14,7 +14,13 @@
           />
         </div>
         @if (previewUrl()) {
-          <img [src]="previewUrl()" class="img-fluid rounded mb-3" alt="Preview da imagem" />
+          <div class="text-center">
+            <img
+              [src]="previewUrl()"
+              class="img-thumbnail rounded mb-3 w-25"
+              alt="Preview da imagem"
+            />
+          </div>
         }
 
         <button
@@ -41,6 +47,30 @@
           </div>
         }
       </form>
+      <br>
+      <br>
+      <div class="container">
+        <h4 class="mb-3">Galeria</h4>
+
+        @if (photos().length === 0) {
+          <p class="text-muted">Nenhuma imagem enviada ainda.</p>
+        }
+
+        <div class="row row-cols-2 row-cols-md-4 g-3">
+          @for (photo of photos(); track photo.key) {
+            <div class="col">
+              <div class="card h-100">
+                <img
+                  [src]="photo.url"
+                  class="card-img-top"
+                  [alt]="photo.key"
+                  style="object-fit: cover; height: 150px"
+                />
+              </div>
+            </div>
+          }
+        </div>
+      </div>
     </div>
   </div>
 </div>

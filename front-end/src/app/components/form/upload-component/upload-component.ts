@@ -1,5 +1,5 @@
-import { Component, inject, signal } from '@angular/core';
-import { Upload, PresignedPostResponse } from '../../../services/upload';
+import { Component, inject, signal, OnInit } from '@angular/core';
+import { Upload, PresignedPostResponse, Photo } from '../../../services/upload';
 
 @Component({
   imports: [],
@@ -12,8 +12,20 @@ export class UploadComponent {
 
   selectedFile = signal<File | null>(null);
   previewUrl = signal<string | null>(null);
+  photos = signal<Photo[]>([]);
   uploading = signal(false);
   mensagem = signal('');
+
+  ngOnInit(): void {
+    this.loadingPhotos();
+  }
+
+  loadingPhotos(): void{
+    this.uploadService.getPhotos().subscribe({
+      next: (response) => this.photos.set(response.photos),
+      error: (err) => console.error('Erro ao carregar fotos: ', err)
+    });
+  }
 
   onFileSelected(event: Event): void {
     const input = event.target as HTMLInputElement;
@@ -43,6 +55,8 @@ export class UploadComponent {
             this.mensagem.set('Upload concluído com sucesso!');
             this.uploading.set(false);
             this.selectedFile.set(null);
+            this.clearSelected();
+            this.loadingPhotos();
           },
           error: (err) => {
             console.error('Erro no upload pro MinIO:', err);
@@ -57,5 +71,13 @@ export class UploadComponent {
         this.uploading.set(false);
       },
     });
+  }
+
+  private clearSelected(): void {
+    const oldUrl = this.previewUrl();
+    if (oldUrl) URL.revokeObjectURL(oldUrl);
+
+    this.selectedFile.set(null);
+    this.previewUrl.set(null);
   }
 }

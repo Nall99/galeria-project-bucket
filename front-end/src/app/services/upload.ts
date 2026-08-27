@@ -6,6 +6,17 @@ export interface PresignedPostResponse {
   url: string;
   fields: { [key: string]: string }
 }
+
+export interface Photo {
+  key: string;
+  url: string;
+  last_modified: string;
+}
+
+export interface PhotosResponse {
+  photos: Photo[];
+}
+
 @Service()
 export class Upload {
   private http = inject(HttpClient)
@@ -25,4 +36,9 @@ export class Upload {
 
     return this.http.post(presignedData.url, formData);
   }
+
+  getPhotos(): Observable<PhotosResponse> {
+    return this.http.get<PhotosResponse>(`${this.apiUrl}/photos`);
+  }
+
 }
