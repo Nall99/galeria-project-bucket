@@ -34,7 +34,9 @@
             },
             "ssr": {
               "entry": "src/server.ts"
-            }
+
+            },
+            "prerender": false
           },
           "configurations": {
             "production": {
