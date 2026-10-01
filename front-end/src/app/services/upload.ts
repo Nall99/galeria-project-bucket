@@ -20,7 +20,7 @@ export interface PhotosResponse {
 @Service()
 export class Upload {
   private http = inject(HttpClient)
-  private apiUrl = 'https://galeria-bucket-docker.onrender.com';
+  private apiUrl = 'http://localhost:8000';
 
   getUploadUrl(filename: string): Observable<PresignedPostResponse>{
     return this.http.post<PresignedPostResponse>(`${this.apiUrl}/upload-url`, { filename });
